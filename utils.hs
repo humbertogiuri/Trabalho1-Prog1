@@ -44,17 +44,44 @@ removeDup l = removeD l []
         | tem x ls = removeD xs ls
         | otherwise = x: removeD xs (x:ls)
 
-geraVetorValoresAleatorios :: Int -> [Int]
-geraVetorValoresAleatorios seed = take 50 (removeDup ((randomRs (1,150) (mkStdGen seed) :: [Int])))
 
+calculaTamanhoVetorTeste :: Int -> Int -> Int
+calculaTamanhoVetorTeste porcentagem tamanhoTotal = (porcentagem * tamanhoTotal) `div` 100 
+
+
+geraVetorValoresAleatorios :: Int -> Int -> Int -> [Int]
+geraVetorValoresAleatorios seed tamanhoTest tamanhoTotal = take (tamanhoTest) (removeDup ((randomRs (1, tamanhoTotal) (mkStdGen seed) :: [Int])))
+
+geraVetorTeste :: [Int] ->  [([Double], String)] -> [([Double], String)]
+geraVetorTeste [] _ = error "impossivel gerar vetor de teste"
+geraVetorTeste _ [] = error "impossivel gerar vetor de teste"
+geraVetorTeste aleatorios dataset = [dataset !! x | x <- aleatorios]
+
+geraVetorTrain :: Int -> [Int] ->  [([Double], String)] -> [([Double], String)]
+geraVetorTrain _ [] _ = error "impossivel gerar vetor de teste"
+geraVetorTrain _ _ [] = error "impossivel gerar vetor de teste"
+geraVetorTrain tamanhoTotal aleatorios dataset = [dataset !! x | x <- [0..tamanhoTotal - 1], x `notElem` aleatorios]
+
+{- 
 separaPorInd :: [Int] -> [a] -> ([a], [a])
 separaPorInd lind base = (base1, base2)
    where
       base1 = [base!!i|i<-[0..(length(base)-1)], 
          not (elem i lind)] 
       base2 = [base!!i|i <- lind]
+-}
 
 main :: IO ()
 main = do
    content <- readFile "iris.csv"
-   print . lines $ content
+   let linhas = map split $ lines content
+   let dataset = map formataLinha linhas
+   let tamanhoTotal = length $ dataset
+   let aleatorios = geraVetorValoresAleatorios 42 (calculaTamanhoVetorTeste 20 tamanhoTotal) (tamanhoTotal)
+   let datasetTeste = geraVetorTeste aleatorios dataset
+   let datasetTrain = geraVetorTrain tamanhoTotal aleatorios dataset
+   mapM_ print  datasetTrain
+   print . length $ datasetTrain
+   return()
+
+
