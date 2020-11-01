@@ -3,6 +3,7 @@ module Utils (
    toInt,
    split,
    formataLinha,
+   removeDup,
    distanciaEuclediana,
    calculaTamanhoVetorTeste,
    geraVetorValoresAleatorios,
@@ -11,9 +12,6 @@ module Utils (
    calculaAcuracia
 ) where
 
-import System.IO
-import Data.List
-import Data.Char
 import System.Random (randomRs, mkStdGen)
 
 
@@ -79,6 +77,7 @@ geraVetorTreino _ _ [] = error "impossivel gerar vetor de teste"
 geraVetorTreino tamanhoTotal aleatorios dataset = [dataset !! x | x <- [0..tamanhoTotal - 1], x `notElem` aleatorios]
 
 
+--retorna um double que diz a quatidade de predicoes certas divido pelas predicoes totais
 calculaAcuracia :: [String] -> [String] -> Double
 calculaAcuracia predicoes reais  = (calculaQuantidadeCorretos predicoes reais) / fromIntegral (length reais)
    where
@@ -87,4 +86,3 @@ calculaAcuracia predicoes reais  = (calculaQuantidadeCorretos predicoes reais) /
       calculaQuantidadeCorretos (p:predicoes) (r:reais)
          | p == r = 1 + calculaQuantidadeCorretos predicoes reais
          | otherwise = 0 + calculaQuantidadeCorretos predicoes reais
-
