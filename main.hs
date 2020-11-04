@@ -1,5 +1,6 @@
 import Utils
 import Knn
+import Centroides
 
 main :: IO ()
 main = do
@@ -25,11 +26,22 @@ main = do
    
    let datasetTeste = geraVetorTeste aleatorios dataset
    let datasetTreino = geraVetorTreino tamanhoTotal aleatorios dataset
-
-   let predicoes = todasPredicoes datasetTreino datasetTeste
    
-   let acuracia = calculaAcuracia predicoes (map snd datasetTeste)
-   putStr "Vizinho mais proximo: "
-   print (acuracia * 100)
-     
+   --Roda o arquivo para o knn
+   let predicoesKnn = todasPredicoes datasetTreino datasetTeste
+   let acuraciaKnn = calculaAcuracia predicoesKnn (map snd datasetTeste)
+   putStr "Acuracia(vizinho): "
+   putStr . show $ (acuraciaKnn * 100)
+   putStrLn "%"
+
+   --Roda o programa para centroides
+   let classes = retornaClassesUnicas datasetTreino
+   let vetorCentroides = centroides datasetTreino classes
+
+   let predicoesCentroides = todasPredicoes vetorCentroides datasetTeste
+   let acuraciaCentroides = calculaAcuracia predicoesCentroides (map snd datasetTeste)
+   putStr "Acuracia(centroides): "
+   putStr . show $ (acuraciaCentroides * 100)
+   putStrLn "%"
+
    return()

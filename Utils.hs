@@ -3,19 +3,21 @@ module Utils (
    toInt,
    split,
    formataLinha,
+   removeDup,
    distanciaEuclediana,
    calculaTamanhoVetorTeste,
    geraVetorValoresAleatorios,
    geraVetorTeste,
    geraVetorTreino,
-   calculaAcuracia
+   calculaAcuracia, 
+   DataSet,
+   Ponto
 ) where
 
-import System.IO
-import Data.List
-import Data.Char
 import System.Random (randomRs, mkStdGen)
 
+type DataSet = [Ponto]
+type Ponto = ([Double], String)
 
 --transforma uma string para double
 toDouble :: String -> Double
@@ -38,7 +40,7 @@ split lista = split' (reverse lista) [[]]
 
 
 --Transforma um vetor de strings para uma tupla de vetores de Double e uma string
-formataLinha :: [String] -> ([Double], String)
+formataLinha :: [String] -> Ponto
 formataLinha linha = (map toDouble $ init linha, last linha)
 
 
@@ -66,19 +68,20 @@ geraVetorValoresAleatorios :: Int -> Int -> Int -> [Int]
 geraVetorValoresAleatorios seed tamanhoTest tamanhoTotal = take (tamanhoTest) (removeDup ((randomRs (0, tamanhoTotal - 1) (mkStdGen seed) :: [Int])))
 
 --Coloca em um vetor de tuplas os dados que foram previamente selecionados para teste
-geraVetorTeste :: [Int] ->  [([Double], String)] -> [([Double], String)]
-geraVetorTeste [] _ = error "impossivel gerar vetor de teste"
-geraVetorTeste _ [] = error "impossivel gerar vetor de teste"
+geraVetorTeste :: [Int] ->  DataSet -> DataSet
+geraVetorTeste [] _ = error "impossivel gerar vetor de dados"
+geraVetorTeste _ [] = error "impossivel gerar vetor de dados"
 geraVetorTeste aleatorios dataset = [dataset !! x | x <- aleatorios]
 
 
 --Coloca em um vetor de tuplas os dados que foram previamente selecionados para treino
-geraVetorTreino :: Int -> [Int] ->  [([Double], String)] -> [([Double], String)]
-geraVetorTreino _ [] _ = error "impossivel gerar vetor de teste"
-geraVetorTreino _ _ [] = error "impossivel gerar vetor de teste"
+geraVetorTreino :: Int -> [Int] ->  DataSet -> DataSet
+geraVetorTreino _ [] _ = error "impossivel gerar vetor de dados"
+geraVetorTreino _ _ [] = error "impossivel gerar vetor de dados"
 geraVetorTreino tamanhoTotal aleatorios dataset = [dataset !! x | x <- [0..tamanhoTotal - 1], x `notElem` aleatorios]
 
 
+--retorna um double que diz a quatidade de predicoes certas divido pelas predicoes totais
 calculaAcuracia :: [String] -> [String] -> Double
 calculaAcuracia predicoes reais  = (calculaQuantidadeCorretos predicoes reais) / fromIntegral (length reais)
    where
@@ -87,4 +90,3 @@ calculaAcuracia predicoes reais  = (calculaQuantidadeCorretos predicoes reais) /
       calculaQuantidadeCorretos (p:predicoes) (r:reais)
          | p == r = 1 + calculaQuantidadeCorretos predicoes reais
          | otherwise = 0 + calculaQuantidadeCorretos predicoes reais
-
