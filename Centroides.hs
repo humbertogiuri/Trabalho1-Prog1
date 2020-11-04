@@ -3,17 +3,17 @@ module Centroides (
     centroides
 ) where
 
-import Utils (removeDup)
+import Utils
 
 
-retornaClassesUnicas :: [([Double], String)] -> [String]
+retornaClassesUnicas :: DataSet -> [String]
 retornaClassesUnicas dataset = removeDup . retornaClasses $ dataset
     where
         retornaClasses dataset = [classe | (_, classe) <- dataset]
 
 
 --
-retornaPontosDaClasse :: [([Double], String)] -> String -> [[Double]]
+retornaPontosDaClasse :: DataSet -> String -> [[Double]]
 retornaPontosDaClasse dataset classe = [fst dado | dado <- dataset,  snd dado == classe]
 
 
@@ -23,6 +23,6 @@ calculaCentroide [x] i = [a / (fromIntegral i) | a <- x]
 calculaCentroide (x:y:pontos) i = calculaCentroide ((zipWith (+) x y):pontos) (i + 1)    
 
 
-
-centroides :: [([Double], String)] -> [String] ->  [([Double], String)]
+--
+centroides :: DataSet -> [String] ->  DataSet
 centroides dataset classes = [(calculaCentroide (retornaPontosDaClasse dataset classe) 1, classe) | classe <- classes]

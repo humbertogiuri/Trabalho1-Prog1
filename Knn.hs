@@ -5,7 +5,7 @@ module Knn (
 import Utils
 
 
-predicao :: [([Double], String)] -> ([Double], String) -> String
+predicao :: DataSet -> Ponto -> String
 predicao datasetTreino pontoTeste = fst $ foldl calcula ("", -1.0) datasetTreino
     where
         calcula acc a
@@ -14,6 +14,6 @@ predicao datasetTreino pontoTeste = fst $ foldl calcula ("", -1.0) datasetTreino
             | otherwise = acc
 
 
-todasPredicoes :: [([Double], String)] -> [([Double], String)] -> [String]
+todasPredicoes :: DataSet -> DataSet -> [String]
 todasPredicoes datasetTreino datasetTeste = map (predicao datasetTreino) datasetTeste
 
