@@ -1,6 +1,5 @@
 import Utils
-import Knn
-import Centroides
+import Classificador
 
 main :: IO ()
 main = do
@@ -27,7 +26,7 @@ main = do
    let datasetTeste = geraVetorTeste aleatorios dataset
    let datasetTreino = geraVetorTreino tamanhoTotal aleatorios dataset
    
-   --Roda o arquivo para o knn
+   --Roda o programa para o knn
    let predicoesKnn = todasPredicoes datasetTreino datasetTeste
    let acuraciaKnn = calculaAcuracia predicoesKnn (map snd datasetTeste)
    putStr "Acuracia(vizinho): "
@@ -37,7 +36,6 @@ main = do
    --Roda o programa para centroides
    let classes = retornaClassesUnicas datasetTreino
    let vetorCentroides = centroides datasetTreino classes
-
    let predicoesCentroides = todasPredicoes vetorCentroides datasetTeste
    let acuraciaCentroides = calculaAcuracia predicoesCentroides (map snd datasetTeste)
    putStr "Acuracia(centroides): "
