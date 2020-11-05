@@ -76,8 +76,8 @@ geraVetorTeste aleatorios dataset = [dataset !! x | x <- aleatorios]
 
 --Coloca em um vetor de tuplas os dados que foram previamente selecionados para treino
 geraVetorTreino :: Int -> [Int] ->  DataSet -> DataSet
-geraVetorTreino _ [] _ = error "impossivel gerar vetor de dados"
-geraVetorTreino _ _ [] = error "impossivel gerar vetor de dados"
+geraVetorTreino _ [] _ = error "impossivel gerar vetor de dados de teste"
+geraVetorTreino _ _ [] = error "impossivel gerar vetor de dados treino"
 geraVetorTreino tamanhoTotal aleatorios dataset = [dataset !! x | x <- [0..tamanhoTotal - 1], x `notElem` aleatorios]
 
 

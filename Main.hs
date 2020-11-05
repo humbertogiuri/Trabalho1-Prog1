@@ -38,8 +38,17 @@ main = do
    let vetorCentroides = centroides datasetTreino classes
    let predicoesCentroides = todasPredicoes vetorCentroides datasetTeste
    let acuraciaCentroides = calculaAcuracia predicoesCentroides (map snd datasetTeste)
-   putStr "Acuracia(centroides): "
+   putStr "Acuracia(centroide): "
    putStr . show $ (acuraciaCentroides * 100)
    putStrLn "%"
 
+   --Matriz de Confusao
+   let matrizKnn = geraMatrizConfusao predicoesKnn (map snd datasetTeste) classes
+   let matrizCentroides = geraMatrizConfusao predicoesCentroides (map snd datasetTeste) classes
+   
+   putStrLn "vizinho mais próximo:"
+   print matrizKnn
+
+   putStrLn "centroides:"
+   print matrizCentroides
    return()
