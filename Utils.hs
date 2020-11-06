@@ -16,19 +16,49 @@ module Utils (
 
 import System.Random (randomRs, mkStdGen)
 
-type DataSet = [Ponto]
+{-
+Representa 1 ponto no plano cartesiano. 1 tipo que contém 1 vetor de double que representa 
+as coordenadas cartesianas do ponto representado e uma string 
+representado a qual classe esse ponto pertence.
+-}
 type Ponto = ([Double], String)
 
---transforma uma string para double
+{-
+1 tipo que representa um vetor de pontos, logo um dataset.
+-}
+type DataSet = [Ponto]
+
+
+{-
+   Input: Uma String.
+
+   Output: 1 Double.
+   
+   Acao: Usa a funcao read para transformar uma string em 1 double.
+-}
 toDouble :: String -> Double
 toDouble = read
 
 
---transforma uma string para int
+{-
+   Input: Uma String.
+
+   Output: 1 inteiro.
+   
+   Acao: Usa a funcao read para transformar uma string em 1 inteiro.
+-}
 toInt :: String -> Int
 toInt = read
 
---separa as linhas do csv 
+
+{-
+   Input: Uma String.
+
+   Output: 1 vetor de Strings.
+   
+   Acao: Recebe uma string, representado uma linha do csv e separa todos os argumentos
+         tendo em relação a vírgula para separar.
+-}
 split :: String -> [String]
 split [] = []
 split lista = split' (reverse lista) [[]]
@@ -39,18 +69,40 @@ split lista = split' (reverse lista) [[]]
             | otherwise = split' xs ([]:lista_aux)
 
 
---Transforma um vetor de strings para uma tupla de vetores de Double e uma string
+{-
+   Input: 1 vetor de strings.
+
+   Output: 1 tipo Ponto.
+   
+   Acao: transforma o vetor de strings, que representa uma linha do csv ou seja 1 ponto,
+         e transforma ele em 1 tipo ponto que contém as coordenadas cartesianas e o nome da classe.
+-}
 formataLinha :: [String] -> Ponto
 formataLinha linha = (map toDouble $ init linha, last linha)
 
 
---calcula a distancia euclidiana entre dois pontos
+{-
+   Input: 2 vetores de double.
+
+   Output: 1 double.
+   
+   Acao: Calcula a distancia euclidiana entre 2 vetores de doubles, esses vetores
+         representam as coordenadas cartesianas de um ponto, logo eh calculada a distancia
+         entre dois pontos.
+-}
 distanciaEuclediana :: [Double] -> [Double] -> Double
 distanciaEuclediana [] _ = error "ponto invalido"
 distanciaEuclediana _ [] = error "ponto invalido"
 distanciaEuclediana xs ys = sqrt . sum $ zipWith (\x y -> (x - y)^2) xs ys 
 
 
+{-
+   Input: 1 vetor de tipos Eq.
+
+   Output: 1 vetor de tipos Eq.
+   
+   Acao: Percorre o vetor e remove informacoes iguais.
+-}
 removeDup :: Eq a => [a] -> [a]
 removeDup l = removeD l []
    where
@@ -59,29 +111,68 @@ removeDup l = removeD l []
          | x `elem` ls = removeD xs ls
          | otherwise = x: removeD xs (x:ls)
 
---Calcula (retorna um inteiro) a quantidade de dados atribuidos para a parte de teste
+
+{-
+   Input: 2 inteiros.
+
+   Output: 1 inteiros.
+   
+   Acao: Calcula quantos pontos terá o dataset de teste levando em conta a porcentagem 
+         requerida e o numero total de pontos lidos do arquivo.
+-}
 calculaTamanhoVetorTeste :: Int -> Int -> Int
 calculaTamanhoVetorTeste porcentagem tamanhoTotal = (porcentagem * tamanhoTotal) `div` 100 
 
---Gera um vetor com numeros aleatorios nao repetidos para serem usados na hora de selecionar os dados de teste
+
+{-
+   Input: 3 inteiros.
+
+   Output: 1 vetor de inteiros.
+   
+   Acao: gera 1 vetor de valores aleatorios e unicos para selecionar esses pontos para
+         nosso dataset de teste. Esse vetor terá o tamanho que foi indicado para o dataset de teste. 
+-}
 geraVetorValoresAleatorios :: Int -> Int -> Int -> [Int]
 geraVetorValoresAleatorios seed tamanhoTest tamanhoTotal = take (tamanhoTest) (removeDup ((randomRs (0, tamanhoTotal - 1) (mkStdGen seed) :: [Int])))
 
---Coloca em um vetor de tuplas os dados que foram previamente selecionados para teste
+
+{-
+   Input: 1 vetor de inteiros e 1 tipo Dataset.
+
+   Output: 1 tipo Dataset.
+   
+   Acao: seleciona, dos dados lidos do arquivo csv, os Pontos que foram previamente selecionados,
+         usando o vetor de aleatorios, para intergrar nosso datasetde teste.
+-}
 geraVetorTeste :: [Int] ->  DataSet -> DataSet
 geraVetorTeste [] _ = error "impossivel gerar vetor de dados"
 geraVetorTeste _ [] = error "impossivel gerar vetor de dados"
 geraVetorTeste aleatorios dataset = [dataset !! x | x <- aleatorios]
 
 
---Coloca em um vetor de tuplas os dados que foram previamente selecionados para treino
+{-
+   Input: 1 inteiro, 1 vetor de inteiros e 1 tipo Dataset.
+
+   Output: 1 tipo Dataset.
+   
+   Acao: Dos dados lidos do csv, pega aqueles que não dizem respeito ao vetor de aleatorios
+         para integrar nosso vetor de treino.
+-}
 geraVetorTreino :: Int -> [Int] ->  DataSet -> DataSet
 geraVetorTreino _ [] _ = error "impossivel gerar vetor de dados de teste"
 geraVetorTreino _ _ [] = error "impossivel gerar vetor de dados treino"
 geraVetorTreino tamanhoTotal aleatorios dataset = [dataset !! x | x <- [0..tamanhoTotal - 1], x `notElem` aleatorios]
 
 
---retorna um double que diz a quatidade de predicoes certas divido pelas predicoes totais
+{-
+   Input: 2 vetores de strings.
+
+   Output: 1 Double.
+   
+   Acao: Compara os dois vetores de strings e cada vez que, na mesma posicao, as informacoes
+         forem iguais conta um acerto. Dividimos o numero de acertos pelo tamanho do vetor
+         e temos nossa acuracia.
+-}
 calculaAcuracia :: [String] -> [String] -> Double
 calculaAcuracia predicoes reais  = (calculaQuantidadeCorretos predicoes reais) / fromIntegral (length reais)
    where

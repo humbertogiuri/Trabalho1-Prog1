@@ -3,6 +3,7 @@ import Classificador
 
 main :: IO ()
 main = do
+   --Pega os dados de entrada necessarias para o programa
    putStr "Forneca o nome do arquivo de entrada: "
    nomeArquivoEntrada <- getLine
    
@@ -17,6 +18,7 @@ main = do
 
    content <- readFile nomeArquivoEntrada
 
+   --Prepara os dados em datasets de treino e teste
    let linhas = map split $ lines content
    let dataset = map formataLinha linhas
    
