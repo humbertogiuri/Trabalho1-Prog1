@@ -1,2 +1,5 @@
 exemplos/
 teste.*
+*.hi
+*.o
+Main

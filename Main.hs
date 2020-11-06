@@ -1,19 +1,24 @@
 import Utils
+import System.IO
 import Classificador
 
 main :: IO ()
 main = do
    --Pega os dados de entrada necessarias para o programa
    putStr "Forneca o nome do arquivo de entrada: "
+   hFlush stdout
    nomeArquivoEntrada <- getLine
    
    putStr "Forneca o nome do arquivo de saida: "
+   hFlush stdout
    nomeArquivoSaida <- getLine
    
    putStr "Forneca o percentual de exemplos de teste: "
+   hFlush stdout
    porcentagem <- getLine
    
    putStr "Forneca o valor da semente para geracao randomizada: "
+   hFlush stdout
    seed <- getLine
 
    content <- readFile nomeArquivoEntrada
