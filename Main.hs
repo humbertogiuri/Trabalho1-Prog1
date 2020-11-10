@@ -4,22 +4,11 @@ import Classificador
 
 main :: IO ()
 main = do
-   --Pega os dados de entrada necessarias para o programa
-   putStr "Forneca o nome do arquivo de entrada: "
-   hFlush stdout
-   nomeArquivoEntrada <- getLine
-   
-   putStr "Forneca o nome do arquivo de saida: "
-   hFlush stdout
-   nomeArquivoSaida <- getLine
-   
-   putStr "Forneca o percentual de exemplos de teste: "
-   hFlush stdout
-   porcentagem <- getLine
-   
-   putStr "Forneca o valor da semente para geracao randomizada: "
-   hFlush stdout
-   seed <- getLine
+   --Pega os dados de entrada necessarios para o programa
+   nomeArquivoEntrada <- pegaInfo "Forneca o nome do arquivo de entrada: "
+   nomeArquivoSaida <- pegaInfo "Forneca o nome do arquivo de saida: "
+   porcentagem <- pegaInfo "Forneca o percentual de exemplos de teste: "
+   seed <- pegaInfo "Forneca o valor da semente para geracao randomizada: "
 
    content <- readFile nomeArquivoEntrada
 
@@ -53,9 +42,5 @@ main = do
    let matrizKnn = geraMatrizConfusao predicoesKnn (map snd datasetTeste) classes
    let matrizCentroides = geraMatrizConfusao predicoesCentroides (map snd datasetTeste) classes
    
-   putStrLn "vizinho mais próximo:"
-   print matrizKnn
-
-   putStrLn "centroides:"
-   print matrizCentroides
-   return()
+   --Escreve no arquivo de saida
+   geraDocumentoSaida nomeArquivoSaida matrizKnn matrizCentroides

@@ -1,6 +1,7 @@
 module Utils (
    toDouble,
    toInt,
+   pegaInfo,
    split,
    formataLinha,
    removeDup,
@@ -15,6 +16,7 @@ module Utils (
 ) where
 
 import System.Random (randomRs, mkStdGen)
+import System.IO
 
 {-
 Representa 1 ponto no plano cartesiano. 1 tipo que contém 1 vetor de double que representa 
@@ -50,6 +52,20 @@ toDouble = read
 toInt :: String -> Int
 toInt = read
 
+
+{-
+   Input: Uma String.
+
+   Output: IO String
+   
+   Acao: Passa uma mensagem pro usuario no terminal e pega a proximo coisa que o usuario digitar
+-}
+pegaInfo :: String -> IO String
+pegaInfo mensagem = do
+   putStr mensagem
+   hFlush stdout
+   info <- getLine
+   return info
 
 {-
    Input: Uma String.

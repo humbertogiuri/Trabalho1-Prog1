@@ -3,3 +3,5 @@ teste.*
 *.hi
 *.o
 Main
+entrada.txt
+saida.txt

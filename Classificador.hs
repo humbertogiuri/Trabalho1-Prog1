@@ -2,10 +2,14 @@ module Classificador (
     retornaClassesUnicas,
     todasPredicoes,
     centroides,
-    geraMatrizConfusao
+    geraMatrizConfusao,
+    formataMatrizConfusao, 
+    geraDocumentoSaida
 ) where
 
 import Utils
+import Data.List (intercalate)
+
 
 
 {-
@@ -123,3 +127,36 @@ geraMatrizConfusao predicoes verdadeiros classes =
         celulaMatriz (p:predicoes) (v:verdadeiros) classe1 classe2 
             | classe1 == v && classe2 == p = 1 + celulaMatriz predicoes verdadeiros classe1 classe2
             | otherwise = celulaMatriz predicoes verdadeiros classe1 classe2
+
+
+{-
+    Input: 1 vetor de vetor de inteiros.
+
+    Output: Uma string.
+
+    Acao: Cada vetor de inteiros representa uma linha da matriz, assim essa funcao
+          percorre esses vetores transformando os vetores para string e adicionando
+          as virgulas, espaços e '\n' onde sao necessarios usando a funcao foldr.
+-}
+formataMatrizConfusao :: [[Int]] -> String
+formataMatrizConfusao matriz = intercalate "\n"  (map (tail . concat) (map processaLinha matriz))
+    where
+        processaLinha linha = foldr (\x acc -> (',':(espacos x)++show x):acc) [] linha
+        espacos x = take (3 - length(show x)) (repeat ' ')
+
+
+{-
+    Input: 1 FilePath e 2 vetores de vetores de inteiros (matrizes).
+
+    Output: IO().
+
+    Acao: Apenas transfere pro arquivo determinado e como o formato especificado as matrizes.
+-}
+geraDocumentoSaida :: FilePath -> [[Int]] -> [[Int]] -> IO ()
+geraDocumentoSaida arquivo matrizKnn matrizCentroides = do
+   writeFile arquivo "vizinho mais próximo:\n"
+   appendFile arquivo (formataMatrizConfusao matrizKnn)
+   appendFile arquivo "\n\n"
+
+   appendFile arquivo "centroides:\n"
+   appendFile arquivo (formataMatrizConfusao matrizCentroides)
