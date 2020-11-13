@@ -1,6 +1,7 @@
 import Utils
 import System.IO
 import Classificador
+import Text.Printf (printf)
 
 main :: IO ()
 main = do
@@ -25,18 +26,14 @@ main = do
    --Roda o programa para o knn
    let predicoesKnn = todasPredicoes datasetTreino datasetTeste
    let acuraciaKnn = calculaAcuracia predicoesKnn (map snd datasetTeste)
-   putStr "Acuracia(vizinho): "
-   putStr . show $ (acuraciaKnn * 100)
-   putStrLn "%"
+   printf "Acuracia(vizinho): %.2f%%\n" (acuraciaKnn * 100)
 
    --Roda o programa para centroides
    let classes = retornaClassesUnicas datasetTreino
    let vetorCentroides = centroides datasetTreino classes
    let predicoesCentroides = todasPredicoes vetorCentroides datasetTeste
    let acuraciaCentroides = calculaAcuracia predicoesCentroides (map snd datasetTeste)
-   putStr "Acuracia(centroide): "
-   putStr . show $ (acuraciaCentroides * 100)
-   putStrLn "%"
+   printf "Acuracia(centroide): %.2f%%\n" (acuraciaCentroides * 100)
 
    --Matriz de Confusao
    let matrizKnn = geraMatrizConfusao predicoesKnn (map snd datasetTeste) classes

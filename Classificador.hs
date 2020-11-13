@@ -119,7 +119,7 @@ geraMatrizConfusao [] _ _ = error "impossivel gerar matriz de confusao"
 geraMatrizConfusao _ [] _ = error "impossivel gerar matriz de confusao"
 geraMatrizConfusao _ _ [] = error "impossivel gerar matriz de confusao"
 geraMatrizConfusao predicoes verdadeiros classes = 
-    [ [celulaMatriz predicoes verdadeiros classe1 classe2| classe2 <- classes] 
+    transposta  [ [celulaMatriz predicoes verdadeiros classe1 classe2| classe2 <- classes] 
         | classe1 <- classes]
     where
         celulaMatriz [] _ _ _ = 0
@@ -128,6 +128,8 @@ geraMatrizConfusao predicoes verdadeiros classes =
             | classe1 == v && classe2 == p = 1 + celulaMatriz predicoes verdadeiros classe1 classe2
             | otherwise = celulaMatriz predicoes verdadeiros classe1 classe2
 
+        transposta ([]:_) = []
+        transposta matriz =  (map head matriz) : transposta (map tail matriz)
 
 {-
     Input: 1 vetor de vetor de inteiros.
