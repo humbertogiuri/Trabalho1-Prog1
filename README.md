@@ -1,6 +1,6 @@
 <h1>Trabalho 1 - Programação 1</h1>
-<p align="center">Primeiro trabalho da disciplina Programação I que aborda o paradigma funcional com a linguagem Hasskell.</p> 
-<p align="center">O trabalho consiste em implementar os algoritmos de classificação KNN e Centroídes.</p>
+<p>Primeiro trabalho da disciplina Programação I que aborda o paradigma funcional com a linguagem Hasskell.</p> 
+<p>O trabalho consiste em implementar os algoritmos de classificação KNN e Centroídes.</p>
 
 <h2>Executando o programa:</h2>
   <p>Execute o comando ghc --make Main.hs e espere compilar;</p>
